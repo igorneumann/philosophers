@@ -1,6 +1,3 @@
-# philosophers
-Ejercicio de 42Madrid para trabajar con threads y semaforos
-
 ARGUMENTOS
 number_of_philosophers 
 time_to_die 
