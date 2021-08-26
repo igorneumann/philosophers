@@ -38,8 +38,7 @@ eating, thinking, or sleeping.
 or thinking and of course, while thinking, they are not eating or sleeping.
 • The philosophers sit at a circular table with a large bowl of spaghetti in the center.
 • There are some forks on the table.
-• As spaghetti is difficult to serve and eat with a single fork, it is assumed that a
-philosopher must eat with two forks, one for each hand.
+• As spaghetti is difficult to serve and eat with a single fork, it is assumed that a philosopher must eat with two forks, one for each hand.
 • The philosophers must never be starving.
 • Every philosopher needs to eat.
 • Philosophers don’t speak with each other.
@@ -47,8 +46,11 @@ philosopher must eat with two forks, one for each hand.
 • Each time a philosopher has finished eating, he will drop his forks and start sleeping.
 • When a philosopher is done sleeping, he will start thinking.
 • The simulation stops when a philosopher dies.
-• Each program should have the same options: number_of_philosophers time_to_die
-time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
+• Each program should have the same options: number_of_philosophers 
+time_to_die
+time_to_eat 
+time_to_sleep 
+[number_of_times_each_philosopher_must_eat]
 ◦ number_of_philosophers: is the number of philosophers and also the number
 of forks
 ◦ time_to_die: is in milliseconds, if a philosopher doesn’t start eating ’time_to_die’
