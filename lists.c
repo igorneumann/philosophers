@@ -6,13 +6,13 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:04:55 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/26 20:10:54 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/30 19:04:31 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-t_data	*ft_new(int ph_number)
+t_data	*ft_new(int ph_number, uint64_t tm_start, t_main *main)
 {
 	t_data	*new;
 
@@ -20,13 +20,14 @@ t_data	*ft_new(int ph_number)
 	if (!new)
 		return (NULL);
 	new->prev = NULL;
-	new->tm_state = get_time();
 	new->eaten = 0;
-	new->fork = 1;
+	new->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t *));
 	new->state = 0;
+	new->tm_eat = get_time() - tm_start;
 	new->number = ph_number;
 	new->thread = NULL;
 	new->next = NULL;
+	new->main = main;
 	return (new);
 }
 

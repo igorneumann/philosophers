@@ -6,35 +6,48 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/26 20:10:54 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/30 20:48:15 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	phil_sleep(t_main *main)
+int	phil_sleep(t_data *philo)
 {
-	printf ("%llu, %i is sleeping\n", get_time(), main->phil->number);
+	philo->tm_end = (get_time() - philo->main->tm_start) + (philo->main->tm_sleep);
+	philo->state = 2;
+	pthread_mutex_lock(philo->main->print);
+	printf ("%llu, %i is sleeping\n", (get_time() - philo->main->tm_start), philo->number);
+	pthread_mutex_unlock(philo->main->print);
+	while ((get_time() - philo->main->tm_start) < philo->tm_end)
+		usleep(philo->main->ph_number * 10);
 	return (0);
 }
 
-int	phil_eat(t_main *main)
+int	phil_eat(t_data *philo)
 {
-	if (main->phil->state != 1 && main->phil->fork == 1
-		&& main->phil->prev->fork == 1)
-	{
-		main->phil->fork = 0;
-		main->phil->prev->fork = 0;
-		main->phil->tm_state = get_time();
-		main->phil->state = 1;
-		printf ("%llu, %i is eating\n", get_time(), main->phil->number);
-		return (1);
-	}
+	philo->tm_eat = get_time() - philo->main->tm_start;
+	philo->tm_end = philo->tm_eat + (philo->main->tm_eat);
+	pthread_mutex_lock(philo->fork);
+	pthread_mutex_lock(philo->prev->fork);
+	philo->state = 1;
+	philo->eaten += 1;
+	pthread_mutex_lock(philo->main->print);
+	printf ("%llu, %i is eating\n", philo->tm_eat, philo->number);
+	pthread_mutex_unlock(philo->main->print);
+	pthread_mutex_unlock(philo->fork);
+	pthread_mutex_unlock(philo->prev->fork);
+	while ((get_time() - philo->main->tm_start) < philo->tm_end)
+		usleep(philo->main->ph_number * 10);
 	return (0);
 }
 
-int	phil_think(t_main *main)
+int	phil_think(t_data *philo)
 {
-	printf ("%llu, %i thinking\n", get_time(), main->phil->number);
+	philo->state = 3;
+	pthread_mutex_lock(philo->main->print);
+	printf ("%llu, %i thinking\n", (get_time() - philo->main->tm_start), philo->number);
+	pthread_mutex_unlock(philo->main->print);
+	usleep(philo->main->ph_number * 10);
 	return (0);
 }

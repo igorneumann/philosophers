@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/26 20:17:03 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/30 20:49:32 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,58 +26,64 @@ int	errors(int error)
 	return (-1);
 }
 
-int	init(t_main *main, int argc, char **argv)
+t_data	*init(t_main *main, int argc, char **argv)
 {
-	int	i;
+	int						i;
+	t_data					*philo;
+	static pthread_mutex_t	print;
 
+	main->tm_start = get_time();
 	main->ph_number = ft_atoi(argv[1]);
 	main->tm_die = ft_atoi(argv[2]);
 	main->tm_eat = ft_atoi(argv[3]);
 	main->tm_sleep = ft_atoi(argv[4]);
+	pthread_mutex_init(&print, NULL);
+	main->print = &print;
 	if (argc == 6)
 		main->eatnum = ft_atoi(argv[5]);
+	else
+		main->eatnum = 0;
 	i = main->ph_number + 1;
 	while (--i > 0)
-		ft_lst_add(&main->phil, ft_new(i));
-	return (0);
+		ft_lst_add(&philo, ft_new(i, main->tm_start, main));
+	return (philo);
 }
 
 void	*philo_routine(void *arg)
 {
-	t_main		*main;
-	uint64_t	time;
-	int			state;
+	t_data		*philo;
 
-	main = arg;
-	while (main->phil->state != -1)
+	philo = arg;
+	while (philo->state != -1 && (philo->main->eatnum == 0
+			|| philo->eaten < philo->main->eatnum))
 	{
-		time = main->phil->tm_state;
-		if (main->phil->state == 1 && (get_time() - time) >= main->tm_die)
-			main->phil->state = -1;
-		if (check_death(main->phil))
-			break ;
-		if (main->phil->state == 0 || main->phil->state == 3)
-			state = phil_eat(main);
-		else if (main->phil->state == 1 && (get_time() - time) >= main->tm_eat)
-			state = phil_sleep(main);
-		else if (main->phil->state == 2
-			&& (get_time() - time) >= main->tm_sleep)
-			state = phil_think(main);
+		if (philo->state == 1)
+			phil_sleep(philo);
+		else if (philo->state == 2)
+			phil_think(philo);
+		else
+			phil_eat(philo);
 	}
 	return (NULL);
 }
 
-int	init_thread(t_main	*main)
+int	init_thread(t_data *philo)
 {
-	if (0 != pthread_create(&main->phil->thread, NULL, philo_routine, main))
+	static pthread_mutex_t	fork;
+
+	if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
 		return (-1);
-	pthread_join(main->phil->thread, NULL);
+	pthread_mutex_init(&fork, NULL);
+	philo->fork = &fork;
+	philo->tm_eat = get_time();
+	pthread_join(philo->thread, NULL);
 	return (0);
 }
 
 int	main(int argc, char **argv)
 {
 	t_main	main;
+	t_data	*philo;
 	int		i;
 
 	i = 0;
@@ -85,12 +91,12 @@ int	main(int argc, char **argv)
 		return (errors(1));
 	else if (argc > 6)
 		return (errors(2));
-	init(&main, argc, argv);
+	philo = init(&main, argc, argv);
 	while (++i <= main.ph_number)
 	{
-		if (init_thread(&main) != 0)
+		if (init_thread(philo) != 0)
 			return (-1);
-		main.phil = main.phil->next;
+		philo = philo->next;
 	}
 	return (0);
 }
