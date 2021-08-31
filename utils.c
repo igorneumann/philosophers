@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:06:06 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/26 19:42:26 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/31 18:04:47 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,20 @@ int	check_death(t_data *elem)
 		}
 	}
 	return (0);
+}
+
+void	spitit(char *cad, t_data *philo)
+{
+	pthread_mutex_lock(philo->main->print);
+	printf ("%llu, %i %s\n", (get_time() - philo->main->tm_start),
+		philo->number, cad);
+	pthread_mutex_unlock(philo->main->print);
+}
+
+void	rex_sit(t_data *philo)
+{
+	while ((get_time() - philo->main->tm_start) < philo->tm_end)
+		usleep(philo->main->ph_number * 10);
 }
 
 uint64_t	get_time(void)

@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 18:56:56 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/30 19:04:05 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/31 19:51:01 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct s_main
 	uint64_t		tm_die; // tiempo para morrirse
 	uint64_t		tm_eat; // tiempo para comer
 	uint64_t		tm_sleep; // tiempo para dormir
+	pthread_mutex_t	**fork; // tenedores
 	pthread_mutex_t	*print; // mutex de impresion
 	int				eatnum; // cuantas veces tienen que comer
 }			t_main;
@@ -40,7 +41,6 @@ typedef struct s_data
 	t_main			*main; // tabla MAIN
 	pthread_t		thread;
 	int				number; // # del filosofo
-	pthread_mutex_t	*fork; // tenedor a su redecha disponible
 	int				state; // estado -1 dead, 0 (idle - initial state), 1 (eating), 2 (sleeping), 3 (thinking)
 	uint64_t		tm_eat; // hora de ultima comida
 	uint64_t		tm_end; // hora terminar procceso actual
@@ -60,6 +60,8 @@ int			main(int argc, char **argv);
 *** utils.c
 */
 
+void		spitit(char *cad, t_data *philo);
+void		rex_sit(t_data *philo);
 int			check_death(t_data *elem);
 uint64_t	get_time(void);
 int			ft_atoi(const char *n);
@@ -84,6 +86,9 @@ t_data		*remove_elem(t_data *elem);
 *** phil_states.c
 */
 
+void		evenoddunlock(t_data *philo);
+void		evenoddlock(t_data *philo);
+void		calc_time(t_data *philo, int type);
 int			phil_sleep(t_data *philo);
 int			phil_eat(t_data *philo);
 int			phil_think(t_data *philo);

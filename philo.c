@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/31 17:00:29 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:23:32 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ t_data	*init(t_main *main, int argc, char **argv)
 	else
 		main->eatnum = 0;
 	i = main->ph_number + 1;
+	main->fork = malloc((main->ph_number + 1) * sizeof(pthread_mutex_t *));
 	while (--i > 0)
 		ft_lst_add(&philo, ft_new(i, main->tm_start, main));
 	return (philo);
@@ -69,12 +70,9 @@ void	*philo_routine(void *arg)
 
 int	init_thread(t_data *philo)
 {
-	static pthread_mutex_t	fork;
-
 	if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
 		return (-1);
-	pthread_mutex_init(&fork, NULL);
-	philo->fork = &fork;
+	pthread_mutex_init(philo->main->fork[philo->number], NULL);
 	philo->tm_eat = get_time();
 	return (0);
 }

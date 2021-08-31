@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:04:55 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/30 19:04:31 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/31 20:10:59 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,21 @@
 
 t_data	*ft_new(int ph_number, uint64_t tm_start, t_main *main)
 {
-	t_data	*new;
+	t_data					*new;
+	static pthread_mutex_t	mutex;
 
 	new = (t_data *)malloc(sizeof(t_data));
 	if (!new)
 		return (NULL);
 	new->prev = NULL;
 	new->eaten = 0;
-	new->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t *));
 	new->state = 0;
 	new->tm_eat = get_time() - tm_start;
 	new->number = ph_number;
 	new->thread = NULL;
 	new->next = NULL;
 	new->main = main;
+	main->fork[ph_number] = &mutex;
 	return (new);
 }
 
