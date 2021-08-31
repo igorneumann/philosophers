@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/30 20:49:32 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/08/31 17:00:29 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int	init_thread(t_data *philo)
 	pthread_mutex_init(&fork, NULL);
 	philo->fork = &fork;
 	philo->tm_eat = get_time();
-	pthread_join(philo->thread, NULL);
 	return (0);
 }
 
@@ -96,6 +95,12 @@ int	main(int argc, char **argv)
 	{
 		if (init_thread(philo) != 0)
 			return (-1);
+		philo = philo->next;
+	}
+	i = 0;
+	while (++i <= main.ph_number)
+	{
+		pthread_join(philo->thread, NULL);
 		philo = philo->next;
 	}
 	return (0);
