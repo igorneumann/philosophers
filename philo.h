@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 18:56:56 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/31 19:51:01 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 18:00:08 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ typedef struct s_data
 
 int			errors(int error);
 t_data		*init(t_main *main, int argc, char **argv);
-int			init_thread(t_data *philo);
+int			init_thread(t_data *philo, int ph_number);
 int			main(int argc, char **argv);
 
 /*
@@ -87,10 +87,10 @@ t_data		*remove_elem(t_data *elem);
 */
 
 void		evenoddunlock(t_data *philo);
-void		evenoddlock(t_data *philo);
+void		lockit(t_data *philo, pthread_mutex_t **fork, int left, int right);
 void		calc_time(t_data *philo, int type);
-int			phil_sleep(t_data *philo);
-int			phil_eat(t_data *philo);
-int			phil_think(t_data *philo);
+void		phil_sleep(t_data *philo, int left, int right);
+void		phil_eat(t_data *philo, int left, int right);
+void		phil_think(t_data *philo, int left, int right);
 
 #endif

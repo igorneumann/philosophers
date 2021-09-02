@@ -6,10 +6,11 @@
 #    By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/29 18:51:16 by ineumann          #+#    #+#              #
-#    Updated: 2021/08/31 17:27:27 by ineumann         ###   ########.fr        #
+#    Updated: 2021/09/02 16:38:12 by ineumann         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+PARAMS			=	4 2000 2000 2000
 NAME			=	philo
 SRCS			=	philo.c lists.c utils.c lists_utils.c phil_states.c
 OBJS 			=	$(SRCS:.c=.o)
@@ -19,6 +20,9 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	$(CC) $(SRCS) $(LIBS) -o $(NAME)
+
+run: re
+	@./philo $(PARAMS)
 
 norm:
 	norminette -R ./
@@ -32,4 +36,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re norm
+.PHONY: all clean fclean re norm run

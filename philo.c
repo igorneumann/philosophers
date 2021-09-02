@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/08/31 20:23:32 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 18:16:58 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,27 +53,30 @@ t_data	*init(t_main *main, int argc, char **argv)
 void	*philo_routine(void *arg)
 {
 	t_data		*philo;
+	int			left;
+	int			right;
 
 	philo = arg;
+	left = philo->number;
+	right = philo->next->number;
 	while (philo->state != -1 && (philo->main->eatnum == 0
 			|| philo->eaten < philo->main->eatnum))
-	{
-		if (philo->state == 1)
-			phil_sleep(philo);
-		else if (philo->state == 2)
-			phil_think(philo);
-		else
-			phil_eat(philo);
-	}
+		phil_eat(philo, left, right);
 	return (NULL);
 }
 
-int	init_thread(t_data *philo)
+int	init_thread(t_data *philo, int ph_number)
 {
-	if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
-		return (-1);
-	pthread_mutex_init(philo->main->fork[philo->number], NULL);
-	philo->tm_eat = get_time();
+	int	i;
+
+	i = 0;
+	while (++i <= ph_number)
+	{
+		if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
+			return (-1);
+		philo->tm_eat = (get_time() - philo->main->tm_start);
+		philo = philo->next;
+	}
 	return (0);
 }
 
@@ -83,18 +86,20 @@ int	main(int argc, char **argv)
 	t_data	*philo;
 	int		i;
 
-	i = 0;
 	if (argc < 5)
 		return (errors(1));
 	else if (argc > 6)
 		return (errors(2));
 	philo = init(&main, argc, argv);
+	i = 0;
 	while (++i <= main.ph_number)
 	{
-		if (init_thread(philo) != 0)
-			return (-1);
-		philo = philo->next;
+		main.fork[i] = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
+		pthread_mutex_init(main.fork[i], NULL);
 	}
+	i = 0;
+	if (init_thread(philo, main.ph_number) != 0)
+		return (-1);
 	i = 0;
 	while (++i <= main.ph_number)
 	{
