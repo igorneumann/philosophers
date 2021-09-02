@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 18:56:56 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 18:00:08 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 19:07:04 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 typedef struct s_main
 {
 	int				ph_number; // numero de filosofos
+	int				died; //si alguno esta muerto;
 	uint64_t		tm_start; // tiempo inicio
 	uint64_t		tm_die; // tiempo para morrirse
 	uint64_t		tm_eat; // tiempo para comer
@@ -92,5 +93,11 @@ void		calc_time(t_data *philo, int type);
 void		phil_sleep(t_data *philo, int left, int right);
 void		phil_eat(t_data *philo, int left, int right);
 void		phil_think(t_data *philo, int left, int right);
+
+/*
+*** the-killer.c
+*/
+
+void		killer(t_data *philo, int *died);
 
 #endif

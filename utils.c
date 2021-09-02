@@ -6,40 +6,27 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:06:06 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 17:50:58 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 19:18:12 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_death(t_data *elem)
-{
-	t_data	*old;
-
-	old = elem;
-	if (elem)
-	{
-		while (elem->next && elem->next != old)
-		{
-			if (elem->state == -1)
-				return (1);
-			elem = elem->next;
-		}
-	}
-	return (0);
-}
-
 void	spitit(char *cad, t_data *philo)
 {
-	pthread_mutex_lock(philo->main->print);
-	printf ("%llu, %i %s\n", (get_time() - philo->main->tm_start),
-		philo->number, cad);
-	pthread_mutex_unlock(philo->main->print);
+	if (philo->state != -1 && philo->main->died == 0)
+	{
+		pthread_mutex_lock(philo->main->print);
+		printf ("%llu, %i %s\n", (get_time() - philo->main->tm_start),
+			philo->number, cad);
+		pthread_mutex_unlock(philo->main->print);
+	}
 }
 
 void	rex_sit(t_data *philo)
 {
-	while ((get_time() - philo->main->tm_start) < philo->tm_end)
+	while (philo->state != -1 && philo->main->died == 0
+		&& (get_time() - philo->main->tm_start) < philo->tm_end)
 		usleep(philo->main->ph_number * 10);
 }
 

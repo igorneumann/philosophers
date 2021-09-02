@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 18:16:58 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 19:14:34 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ t_data	*init(t_main *main, int argc, char **argv)
 	t_data					*philo;
 	static pthread_mutex_t	print;
 
+	main->died = 0;
 	main->tm_start = get_time();
 	main->ph_number = ft_atoi(argv[1]);
 	main->tm_die = ft_atoi(argv[2]);
@@ -60,7 +61,7 @@ void	*philo_routine(void *arg)
 	left = philo->number;
 	right = philo->next->number;
 	while (philo->state != -1 && (philo->main->eatnum == 0
-			|| philo->eaten < philo->main->eatnum))
+			|| philo->eaten < philo->main->eatnum) && philo->main->died == 0)
 		phil_eat(philo, left, right);
 	return (NULL);
 }
@@ -97,9 +98,9 @@ int	main(int argc, char **argv)
 		main.fork[i] = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(main.fork[i], NULL);
 	}
-	i = 0;
 	if (init_thread(philo, main.ph_number) != 0)
 		return (-1);
+	killer(philo, &main.died);
 	i = 0;
 	while (++i <= main.ph_number)
 	{
