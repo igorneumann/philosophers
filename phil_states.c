@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 19:22:26 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/06 21:15:11 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,28 +24,34 @@ void	calc_time(t_data *philo, int type)
 	}
 }
 
-void	lockit(t_data *philo, pthread_mutex_t **fork, int left, int right)
+void	lockit(t_data *philo, pthread_mutex_t **fork, int left, int *right)
 {
 	int				ph;
 
 	ph = philo->number;
-	if ((ph % 2) == 0 && left && right)
+	if ((ph % 2) == 0 || *right < 0)
 	{
-		pthread_mutex_lock(fork[right]);
-		spitit("🍴 has taken the right fork", philo);
-		pthread_mutex_lock(fork[left]);
-		spitit("🍴 has taken the left fork", philo);
+		if (*right > -1)
+		{
+			pthread_mutex_lock(fork[*right]);
+			spitit("🍴 has taken the right fork", philo);
+			pthread_mutex_lock(fork[left]);
+		}
+		if (*right > -2)
+			spitit("🍴 has taken the left fork", philo);
+		if (*right == -1)
+			*right = -2;
 	}
 	else
 	{
 		pthread_mutex_lock(fork[left]);
 		spitit("🍴 has taken the left fork", philo);
-		pthread_mutex_lock(fork[right]);
+		pthread_mutex_lock(fork[*right]);
 		spitit("🍴 has taken the right fork", philo);
 	}
 }
 
-void	phil_eat(t_data *philo, int left, int right)
+void	phil_eat(t_data *philo, int left, int *right)
 {
 	pthread_mutex_t	**fork;
 
@@ -55,13 +61,17 @@ void	phil_eat(t_data *philo, int left, int right)
 		lockit(philo, fork, left, right);
 		if (philo->state != -1 && philo->main->died == 0)
 			philo->state = 1;
-		spitit("🥩 is eating", philo);
+		if (*right > -1)
+			spitit("🥩 is eating", philo);
 		calc_time (philo, 1);
 		philo->eaten += 1;
 		rex_sit(philo);
-		pthread_mutex_unlock(fork[left]);
-		pthread_mutex_unlock(fork[right]);
-		phil_sleep(philo, left, right);
+		if (*right > -1)
+		{
+			pthread_mutex_unlock(fork[left]);
+			pthread_mutex_unlock(fork[*right]);
+			phil_sleep(philo, left, *right);
+		}
 	}
 }
 
@@ -85,6 +95,6 @@ void	phil_think(t_data *philo, int left, int right)
 		if (philo->state != -1 && philo->main->died == 0)
 			philo->state = 3;
 		spitit("🤯 is thinking", philo);
-		phil_eat(philo, left, right);
+		phil_eat(philo, left, &right);
 	}
 }

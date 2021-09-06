@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 19:14:34 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/06 21:14:56 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ int	errors(int error)
 	return (-1);
 }
 
-t_data	*init(t_main *main, int argc, char **argv)
+t_data	*init(t_main *main, int argc, char **argv, int *j)
 {
 	int						i;
 	t_data					*philo;
 	static pthread_mutex_t	print;
 
+	philo = NULL;
+	*j = 0;
 	main->died = 0;
 	main->tm_start = get_time();
 	main->ph_number = ft_atoi(argv[1]);
@@ -59,10 +61,13 @@ void	*philo_routine(void *arg)
 
 	philo = arg;
 	left = philo->number;
-	right = philo->next->number;
+	if (philo->next)
+		right = philo->next->number;
+	else
+		right = -1;
 	while (philo->state != -1 && (philo->main->eatnum == 0
-			|| philo->eaten < philo->main->eatnum) && philo->main->died == 0)
-		phil_eat(philo, left, right);
+			|| philo->eaten < philo->main->eatnum))
+		phil_eat(philo, left, &right);
 	return (NULL);
 }
 
@@ -76,7 +81,8 @@ int	init_thread(t_data *philo, int ph_number)
 		if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
 			return (-1);
 		philo->tm_eat = (get_time() - philo->main->tm_start);
-		philo = philo->next;
+		if (philo->next)
+			philo = philo->next;
 	}
 	return (0);
 }
@@ -91,8 +97,7 @@ int	main(int argc, char **argv)
 		return (errors(1));
 	else if (argc > 6)
 		return (errors(2));
-	philo = init(&main, argc, argv);
-	i = 0;
+	philo = init(&main, argc, argv, &i);
 	while (++i <= main.ph_number)
 	{
 		main.fork[i] = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
@@ -101,11 +106,14 @@ int	main(int argc, char **argv)
 	if (init_thread(philo, main.ph_number) != 0)
 		return (-1);
 	killer(philo, &main.died);
-	i = 0;
-	while (++i <= main.ph_number)
+	printf("i is %i\n", i);
+	while (--i > 0)
 	{
 		pthread_join(philo->thread, NULL);
-		philo = philo->next;
+		if (philo->next)
+			philo = philo->next;
 	}
+	if (main.ph_number > 1)
+		go_atomic(philo);
 	return (0);
 }

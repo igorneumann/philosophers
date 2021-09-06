@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:06:06 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/02 19:18:12 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/02 20:24:42 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ void	spitit(char *cad, t_data *philo)
 	if (philo->state != -1 && philo->main->died == 0)
 	{
 		pthread_mutex_lock(philo->main->print);
-		printf ("%llu, %i %s\n", (get_time() - philo->main->tm_start),
-			philo->number, cad);
+		if (philo->state != -1 && philo->main->died == 0)
+			printf ("%llu, %i %s\n", (get_time() - philo->main->tm_start),
+				philo->number, cad);
 		pthread_mutex_unlock(philo->main->print);
 	}
 }
