@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 18:56:56 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/06 21:14:40 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/08 18:16:14 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_main
 	uint64_t		tm_die; // tiempo para morrirse
 	uint64_t		tm_eat; // tiempo para comer
 	uint64_t		tm_sleep; // tiempo para dormir
+	uint64_t		tm_now; // tiempo ahora
 	pthread_mutex_t	**fork; // tenedores
 	pthread_mutex_t	*print; // mutex de impresion
 	int				eatnum; // cuantas veces tienen que comer
@@ -97,7 +98,7 @@ void		phil_think(t_data *philo, int left, int right);
 *** the-killer.c
 */
 
-void		go_atomic(t_data *philo);
+int			go_atomic(t_data *philo);
 void		killer(t_data *philo, int *died);
 
 #endif
