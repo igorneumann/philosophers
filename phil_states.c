@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 18:39:20 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/08 20:08:45 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	calc_time(t_data *philo, int type)
 {
 	if (type == 0)
-		philo->tm_end = (philo->main->tm_now - philo->main->tm_start)
+		philo->tm_end = (get_time() - philo->main->tm_start)
 			+ (philo->main->tm_sleep);
 	else if (type == 1)
 	{
-		philo->tm_eat = philo->main->tm_now - philo->main->tm_start;
+		philo->tm_eat = get_time() - philo->main->tm_start;
 		philo->tm_end = philo->tm_eat + (philo->main->tm_eat);
 	}
 }
@@ -64,12 +64,9 @@ void	phil_eat(t_data *philo, int left, int *right)
 		if (*right > -1)
 		{
 			spitit("🥩 is eating", philo);
+			calc_time (philo, 1);
 			philo->eaten += 1;
 			rex_sit(philo);
-		}
-		calc_time (philo, 1);
-		if (*right > -1)
-		{
 			pthread_mutex_unlock(fork[left]);
 			pthread_mutex_unlock(fork[*right]);
 			phil_sleep(philo, left, *right);
@@ -97,6 +94,8 @@ void	phil_think(t_data *philo, int left, int right)
 		if (philo->state != -1 && philo->main->died == 0)
 			philo->state = 3;
 		spitit("🤯 is thinking", philo);
+		if (philo->main->ph_number % 2 != 0 && philo->number % 2 != 0 )
+			usleep(13);
 		phil_eat(philo, left, &right);
 	}
 }

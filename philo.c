@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 18:53:49 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/08 19:57:47 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ t_data	*init(t_main *main, int argc, char **argv, int *j)
 	*j = 0;
 	main->died = 0;
 	main->tm_start = get_time();
-	main->tm_now = main->tm_start;
 	main->ph_number = ft_atoi(argv[1]);
 	main->tm_die = ft_atoi(argv[2]);
 	main->tm_eat = ft_atoi(argv[3]);
@@ -81,7 +80,7 @@ int	init_thread(t_data *philo, int ph_number)
 	{
 		if (0 != pthread_create(&philo->thread, NULL, philo_routine, philo))
 			return (-1);
-		philo->tm_eat = (philo->main->tm_now - philo->main->tm_start);
+		philo->tm_eat = (get_time() - philo->main->tm_start);
 		if (philo->next)
 			philo = philo->next;
 	}
@@ -107,7 +106,6 @@ int	main(int argc, char **argv)
 	if (init_thread(philo, main.ph_number) != 0)
 		return (-1);
 	killer(philo, &main.died);
-	printf("i is %i\n", i);
 	while (--i > 0)
 	{
 		pthread_join(philo->thread, NULL);

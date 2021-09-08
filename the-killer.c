@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/02 18:41:12 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 18:48:37 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/08 19:58:42 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,29 +34,21 @@ int	go_atomic(t_data *philo)
 void	killer(t_data *philo, int *died)
 {
 	t_main		*main;
-	int			i;
-	uint64_t	now;
 	uint64_t	eaten;
+	int			i;
 
 	i = 0;
-	now = 0;
 	main = philo->main;
-	while (*died != 1 && philo->state != -1
-		&& (eaten <= main->tm_die))
+	eaten = 0;
+	while (*died != 1 && philo->state != -1 && eaten < main->tm_die)
 	{
-		main->tm_now = get_time();
-		now = main->tm_now - main->tm_start;
-		eaten = now - philo->tm_eat;
+		eaten = (get_time() - main->tm_start - philo->tm_eat);
 		if (philo->next)
 			philo = philo->next;
 	}
 	pthread_mutex_lock(philo->main->print);
-	printf ("main->tm_now es %llu\n", main->tm_now);
-	printf ("philo->tm_eat is %llu\n", philo->tm_eat);
-	printf ("now es %llu\n", now);
-	printf ("eaten es %llu\n", eaten);
-	printf ("time to die is %llu\n", main->tm_die);
-	printf ("%llu, %i 🏴‍☠️ died\n", (main->tm_now - main->tm_start), philo->number);
+	printf ("%llu, %i 🏴‍☠️ died\n", (get_time() - philo->main->tm_start),
+		philo->number);
 	close(1);
 	pthread_mutex_unlock(philo->main->print);
 	*died = 1;

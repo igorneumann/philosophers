@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:04:55 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 18:40:05 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/06 20:51:56 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ t_data	*ft_new(int ph_number, uint64_t tm_start, t_main *main)
 	new->prev = NULL;
 	new->eaten = 0;
 	new->state = 0;
-	main->tm_now = get_time();
-	new->tm_eat = main->tm_now - tm_start;
+	new->tm_eat = get_time() - tm_start;
 	new->number = ph_number;
 	new->thread = NULL;
 	new->next = NULL;
