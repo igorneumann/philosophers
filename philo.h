@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 18:56:56 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 19:58:20 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/09 17:51:18 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ void		phil_think(t_data *philo, int left, int right);
 
 int			go_atomic(t_data *philo);
 void		killer(t_data *philo, int *died);
+void		killer_message(t_data *philo, int died);
 
 #endif

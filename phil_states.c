@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 20:08:45 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/09 18:44:54 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,9 @@ void	phil_eat(t_data *philo, int left, int *right)
 			rex_sit(philo);
 			pthread_mutex_unlock(fork[left]);
 			pthread_mutex_unlock(fork[*right]);
-			phil_sleep(philo, left, *right);
+			if (philo->state != -1 && (philo->main->eatnum == 0
+					|| philo->eaten < philo->main->eatnum))
+				phil_sleep(philo, left, *right);
 		}
 	}
 }
@@ -83,7 +85,9 @@ void	phil_sleep(t_data *philo, int left, int right)
 			philo->state = 2;
 		spitit("🙈 is sleeping", philo);
 		rex_sit(philo);
-		phil_think(philo, left, right);
+		if (philo->state != -1 && (philo->main->eatnum == 0
+				|| philo->eaten < philo->main->eatnum))
+			phil_think(philo, left, right);
 	}
 }
 
@@ -96,6 +100,12 @@ void	phil_think(t_data *philo, int left, int right)
 		spitit("🤯 is thinking", philo);
 		if (philo->main->ph_number % 2 != 0 && philo->number % 2 != 0 )
 			usleep(13);
-		phil_eat(philo, left, &right);
+		if (philo->number % 2 != 0 )
+			usleep(13);
+		if (philo->main->ph_number == philo->number && philo->number % 2 != 0 )
+			usleep(7);
+		if (philo->state != -1 && (philo->main->eatnum == 0
+				|| philo->eaten < philo->main->eatnum))
+			phil_eat(philo, left, &right);
 	}
 }
