@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 19:57:47 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:43:29 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ int	main(int argc, char **argv)
 	if (init_thread(philo, main.ph_number) != 0)
 		return (-1);
 	killer(philo, &main.died);
-	while (--i > 0)
+	while (--i > 0 && main.died != 1 && philo->state != -1)
 	{
 		pthread_join(philo->thread, NULL);
 		if (philo->next)

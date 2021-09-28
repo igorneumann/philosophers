@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/09 18:44:54 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 18:36:01 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,8 @@ void	phil_think(t_data *philo, int left, int right)
 		spitit("🤯 is thinking", philo);
 		if (philo->main->ph_number % 2 != 0 && philo->number % 2 != 0 )
 			usleep(13);
-		if (philo->number % 2 != 0 )
-			usleep(13);
+		if (philo->number % 2 != 0 && philo->number != 1)
+			usleep(26);
 		if (philo->main->ph_number == philo->number && philo->number % 2 != 0 )
 			usleep(7);
 		if (philo->state != -1 && (philo->main->eatnum == 0
