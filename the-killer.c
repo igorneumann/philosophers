@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/02 18:41:12 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 18:38:05 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 19:59:33 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,15 @@ void	killer(t_data *philo, int *died)
 {
 	t_main		*main;
 	uint64_t	eaten;
-	int			i;
 
-	i = 0;
 	main = philo->main;
 	eaten = 0;
-	while (*died != 1 && philo->state != -1 && eaten < main->tm_die)
+	while (*died != 1 && philo->state != -1)
 	{
 		eaten = (get_time() - main->tm_start - philo->tm_eat);
-		if (philo->next)
+		if (eaten > main->tm_die)
+			break ;
+		else if (philo->next)
 			philo = philo->next;
 	}
 	pthread_mutex_lock(philo->main->print);

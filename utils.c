@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:06:06 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/08 20:00:33 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 19:12:04 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	rex_sit(t_data *philo)
 {
 	while (philo->state != -1 && philo->main->died == 0
 		&& (get_time() - philo->main->tm_start) < philo->tm_end)
-		usleep(philo->main->ph_number * 4);
+		usleep(philo->main->ph_number);
 }
 
 uint64_t	get_time(void)

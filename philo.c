@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 18:43:29 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 19:24:00 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	errors(int error)
 		printf("1 # filosofo\n2 tiempo para morrir\n3 tiempo para comer\n");
 		printf("4 tiempo para dormir \nOpcional: # veces cada uno comera\n");
 	}
+	else if (error == 3)
+		printf("ERROR: Minimo 1 filosofo\n");
 	return (-1);
 }
 
@@ -98,6 +100,8 @@ int	main(int argc, char **argv)
 	else if (argc > 6)
 		return (errors(2));
 	philo = init(&main, argc, argv, &i);
+	if (main.ph_number < 1)
+		return (errors(3));
 	while (++i <= main.ph_number)
 	{
 		main.fork[i] = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));

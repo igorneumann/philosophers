@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 18:36:01 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 20:08:42 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 void	calc_time(t_data *philo, int type)
 {
 	if (type == 0)
-		philo->tm_end = (get_time() - philo->main->tm_start)
-			+ (philo->main->tm_sleep);
+		philo->tm_end = get_time() - philo->main->tm_start
+			+ philo->main->tm_sleep;
 	else if (type == 1)
 	{
 		philo->tm_eat = get_time() - philo->main->tm_start;
-		philo->tm_end = philo->tm_eat + (philo->main->tm_eat);
+		philo->tm_end = philo->tm_eat + philo->main->tm_eat;
 	}
 }
 
@@ -64,11 +64,11 @@ void	phil_eat(t_data *philo, int left, int *right)
 		if (*right > -1)
 		{
 			spitit("🥩 is eating", philo);
-			calc_time (philo, 1);
 			philo->eaten += 1;
 			rex_sit(philo);
 			pthread_mutex_unlock(fork[left]);
 			pthread_mutex_unlock(fork[*right]);
+			calc_time (philo, 1);
 			if (philo->state != -1 && (philo->main->eatnum == 0
 					|| philo->eaten < philo->main->eatnum))
 				phil_sleep(philo, left, *right);
