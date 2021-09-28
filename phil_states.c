@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/08/26 19:06:38 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 20:08:42 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/28 20:32:07 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ void	phil_eat(t_data *philo, int left, int *right)
 		if (*right > -1)
 		{
 			spitit("🥩 is eating", philo);
+			calc_time (philo, 1);
 			philo->eaten += 1;
 			rex_sit(philo);
 			pthread_mutex_unlock(fork[left]);
 			pthread_mutex_unlock(fork[*right]);
-			calc_time (philo, 1);
 			if (philo->state != -1 && (philo->main->eatnum == 0
 					|| philo->eaten < philo->main->eatnum))
 				phil_sleep(philo, left, *right);
@@ -99,11 +99,9 @@ void	phil_think(t_data *philo, int left, int right)
 			philo->state = 3;
 		spitit("🤯 is thinking", philo);
 		if (philo->main->ph_number % 2 != 0 && philo->number % 2 != 0 )
-			usleep(13);
-		if (philo->number % 2 != 0 && philo->number != 1)
-			usleep(26);
+			usleep(30);
 		if (philo->main->ph_number == philo->number && philo->number % 2 != 0 )
-			usleep(7);
+			usleep(20);
 		if (philo->state != -1 && (philo->main->eatnum == 0
 				|| philo->eaten < philo->main->eatnum))
 			phil_eat(philo, left, &right);

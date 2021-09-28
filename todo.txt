@@ -1,0 +1,3 @@
+- max int
+- error si recibe 0
+- normi
