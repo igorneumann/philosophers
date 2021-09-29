@@ -6,27 +6,11 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 19:00:57 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 20:43:07 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/29 18:05:34 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	errors(int error)
-{
-	if (error == 1)
-		printf("ERROR: Minimo 4 argumentos:\n");
-	else if (error == 2)
-		printf("ERROR: Maximo 5 argumentos:\n");
-	if (error == 1 || error == 2)
-	{
-		printf("1 # filosofo\n2 tiempo para morrir\n3 tiempo para comer\n");
-		printf("4 tiempo para dormir \nOpcional: # veces cada uno comera\n");
-	}
-	else if (error == 3)
-		printf("ERROR: Minimo 1 filosofo\n");
-	return (-1);
-}
 
 t_data	*init(t_main *main, int argc, char **argv, int *j)
 {
@@ -102,6 +86,14 @@ int	main(int argc, char **argv)
 	philo = init(&main, argc, argv, &i);
 	if (main.ph_number < 1)
 		return (errors(3));
+	if (main.tm_die < 1 || main.tm_eat < 1
+		|| main.tm_sleep < 1 || main.eatnum < 0)
+		return (errors(4));
+	return (do_magic(main, philo, i));
+}
+
+int	do_magic(t_main main, t_data *philo, int i)
+{
 	while (++i <= main.ph_number)
 	{
 		main.fork[i] = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));

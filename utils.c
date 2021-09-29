@@ -6,7 +6,7 @@
 /*   By: ineumann <ineumann@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/29 20:06:06 by ineumann          #+#    #+#             */
-/*   Updated: 2021/09/28 19:12:04 by ineumann         ###   ########.fr       */
+/*   Updated: 2021/09/29 18:05:25 by ineumann         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,22 @@ int	ft_atoi(const char *n)
 			return (0);
 	}
 	return (i[2] * i[1]);
+}
+
+int	errors(int error)
+{
+	if (error == 1)
+		printf("ERROR: Minimo 4 argumentos:\n");
+	else if (error == 2)
+		printf("ERROR: Maximo 5 argumentos:\n");
+	if (error == 1 || error == 2)
+	{
+		printf("1 # filosofo\n2 tiempo para morrir\n3 tiempo para comer\n");
+		printf("4 tiempo para dormir \nOpcional: # veces cada uno comera\n");
+	}
+	else if (error == 3)
+		printf("ERROR: Minimo 1 filosofo\n");
+	else if (error == 4)
+		printf("ERROR: Los valores deben de estar entre 0 y 2147483647\n");
+	return (-1);
 }
